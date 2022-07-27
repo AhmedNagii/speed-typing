@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useEffect, useState, useRef } from "react";
 
 function App() {
-  const STARTING_TIME = 5;
+  const STARTING_TIME = 10;
 
   const textAreaRef = useRef(null);
   const [input, setInput] = useState("");
@@ -24,9 +24,10 @@ function App() {
 
   function startGame() {
     setRunning(true);
-    setWordsCount(0);
     setRemainingTime(STARTING_TIME);
     setInput("");
+    textAreaRef.current.disabled = false
+    textAreaRef.current.focus()
   }
   function endGame() {
     setRunning(false);
@@ -39,7 +40,7 @@ function App() {
       setTimeout(() => {
         setRemainingTime((time) => time - 1);
       }, 1000);
-    } else {
+    }  else if(remainingTime === 0) {
       endGame();
     }
   }, [remainingTime, running]);
@@ -47,14 +48,14 @@ function App() {
   return (
     <div className="App">
       <h1>How fast do you type</h1>
-      <textarea ref={textAreaRef} disabled={!running} onChange={handelChange} />
+      <textarea
+       ref={textAreaRef}
+        disabled={!running}
+         onChange={handelChange} 
+         value={input}
+         />
       <h4>Remaining time: {remainingTime}</h4>
-      <button
-        disabled={running}
-        onClick={() => {
-          remainingTime === 0 ? startGame() : setRunning(true);
-        }}
-      >
+      <button disabled={running} onClick={startGame}>
         {remainingTime === 0 ? "Restart" : "start"}{" "}
       </button>
       <h1>Word count: {wordsCount}</h1>
